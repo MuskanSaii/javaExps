@@ -1,0 +1,53 @@
+class Deposit {
+    protected double principal;
+    protected int years;
+    protected double interestRate;
+
+    public Deposit(double principal, int years, double interestRate) {
+        this.principal = principal;
+        this.years = years;
+        this.interestRate = interestRate;
+    }
+
+    public double calculateInterest() {
+        return 0;
+    }
+}
+class FixedDeposit extends Deposit {
+
+    public FixedDeposit(double principal, int years, double interestRate) {
+        super(principal, years, interestRate);
+    }
+    
+    public double calculateInterest() {
+        return (principal * interestRate * years) / 100; 
+    }
+}
+class RecurringDeposit extends Deposit {
+    private int monthlyDeposit;
+
+    public RecurringDeposit(int monthlyDeposit, int years, double interestRate) {
+        super(monthlyDeposit * 12, years, interestRate); 
+        this.monthlyDeposit = monthlyDeposit;
+    }
+
+    public double calculateInterest() {
+        double totalAmount = principal;
+        double monthlyInterestRate = interestRate / 12 / 100;  
+        double rdInterest = 0;
+        
+        for (int i = 1; i <= years * 12; i++) {
+            rdInterest += monthlyDeposit * Math.pow(1 + monthlyInterestRate, (years * 12) - i);
+        }
+        return rdInterest - principal; 
+    }
+}
+public class DepositInterestCalculator {
+    public static void main(String[] args) {
+        Deposit fd = new FixedDeposit(100000, 5, 6.5);
+        System.out.println("Interest earned in Fixed Deposit: " + fd.calculateInterest());
+
+        Deposit rd = new RecurringDeposit(1000, 5, 6.0);
+        System.out.println("Interest earned in Recurring Deposit: " + rd.calculateInterest());
+    }
+}
